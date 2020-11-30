@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	fmt.Println(utils.Fetch(2019, 1))
+	fmt.Println(utils.FetchNumbers(2019, 1))
 }

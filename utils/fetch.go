@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/alexsasharegan/dotenv"
 )
@@ -35,5 +37,32 @@ func Fetch(year int, day int) string {
 	body, err := ioutil.ReadAll(resp.Body)
 	Check(err)
 
-	return string(body)
+	return strings.TrimSpace(string(body))
+}
+
+// FetchLines fetches input data and return lines
+func FetchLines(year int, day int) []string {
+	body := Fetch(year, day)
+
+	return strings.Split(body, "\n")
+}
+
+// FetchNumbers fetches input data and return lines as numbers
+func FetchNumbers(year int, day int) []int {
+	lines := FetchLines(year, day)
+	numbers := make([]int, len(lines))
+
+	for i, line := range lines {
+		numbers[i] = ToInt(line)
+	}
+
+	return numbers
+}
+
+// ToInt converts string to integer
+func ToInt(text string) int {
+	x, err := strconv.Atoi(text)
+	Check(err)
+
+	return x
 }
