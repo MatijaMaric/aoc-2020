@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/alexsasharegan/dotenv"
 )
@@ -16,8 +18,17 @@ func getSessionCookie() string {
 	return os.Getenv("SESSION_COOKIE")
 }
 
-// Fetch input data for problem
-func Fetch(year int, day int) []byte {
+func getCachePath(day int) string {
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		panic("Failed to generate package path.")
+	}
+
+	root := filepath.Dir(filepath.Dir(filename))
+	return filepath.Join(root, fmt.Sprintf("day%02d", day), "input.txt")
+}
+
+func fetch(year int, day int) []byte {
 	url := fmt.Sprintf("https://adventofcode.com/%d/day/%d/input", year, day)
 	client := new(http.Client)
 	req, err := http.NewRequest("GET", url, nil)
@@ -37,4 +48,17 @@ func Fetch(year int, day int) []byte {
 
 	// return strings.TrimSpace(string(body))
 	return body
+}
+
+// GetInput gets input for problem and caches it
+func GetInput(year int, day int) (input []byte) {
+	cachePath := getCachePath(day)
+	if _, stat := os.Stat(cachePath); os.IsNotExist(stat) {
+		input = fetch(year, day)
+		err := ioutil.WriteFile(cachePath, input, 0644)
+		Check(err)
+	} else {
+		input, _ = ioutil.ReadFile(cachePath)
+	}
+	return
 }

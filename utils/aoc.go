@@ -12,7 +12,7 @@ type AdventOfCode struct {
 // GetDay fetches input data for problem
 func GetDay(year int, day int) *AdventOfCode {
 	aoc := new(AdventOfCode)
-	aoc.buffer = Fetch(year, day)
+	aoc.buffer = GetInput(year, day)
 	return aoc
 }
 
