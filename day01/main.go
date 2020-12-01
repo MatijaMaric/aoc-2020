@@ -11,15 +11,12 @@ func main() {
 
 	var part1, part2 int
 
-	for i, x := range numbers {
-		for j, y := range numbers {
-			if i == j {
-				continue
-			}
-			for k, z := range numbers {
-				if i == k || j == k {
-					continue
-				}
+	for i := range numbers {
+		x := numbers[i]
+		for j := i + 1; j < len(numbers); j++ {
+			y := numbers[j]
+			for k := j + 1; k < len(numbers); k++ {
+				z := numbers[k]
 				if x+y+z == 2020 {
 					part2 = x * y * z
 				}
