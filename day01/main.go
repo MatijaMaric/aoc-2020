@@ -17,7 +17,7 @@ func main() {
 				continue
 			}
 			for k, z := range numbers {
-				if j == k {
+				if i == k || j == k {
 					continue
 				}
 				if x+y+z == 2020 {
