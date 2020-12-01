@@ -9,24 +9,35 @@ import (
 func main() {
 	numbers := utils.GetDay(2020, 1).ReadIntLines()
 
-	var part1, part2 int
+	fmt.Println(part1(numbers))
+	fmt.Println(part2(numbers))
+}
 
-	for i := range numbers {
-		x := numbers[i]
-		for j := i + 1; j < len(numbers); j++ {
-			y := numbers[j]
-			for k := j + 1; k < len(numbers); k++ {
-				z := numbers[k]
-				if x+y+z == 2020 {
-					part2 = x * y * z
-				}
-			}
+func part1(input []int) int {
+	for i := range input {
+		x := input[i]
+		for j := i + 1; j < len(input); j++ {
+			y := input[j]
 			if x+y == 2020 {
-				part1 = x * y
+				return x * y
 			}
 		}
 	}
+	return -1
+}
 
-	fmt.Println(part1)
-	fmt.Println(part2)
+func part2(input []int) int {
+	for i := range input {
+		x := input[i]
+		for j := i + 1; j < len(input); j++ {
+			y := input[j]
+			for k := j + 1; k < len(input); k++ {
+				z := input[k]
+				if x+y+z == 2020 {
+					return x * y * z
+				}
+			}
+		}
+	}
+	return -1
 }

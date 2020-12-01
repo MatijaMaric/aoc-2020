@@ -21,14 +21,19 @@ func (aoc *AdventOfCode) ToString() string {
 	return strings.TrimSpace(string(aoc.buffer))
 }
 
-// ReadLines splits buffer into lines of string
-func (aoc *AdventOfCode) ReadLines() []string {
-	return strings.Split(aoc.ToString(), "\n")
+// SplitLines splits string into lines
+func SplitLines(input string) []string {
+	return strings.Split(input, "\n")
 }
 
-// ReadIntLines converts lines of string to int
-func (aoc *AdventOfCode) ReadIntLines() []int {
-	lines := strings.Fields(aoc.ToString())
+// ReadLines splits buffer into lines of string
+func (aoc *AdventOfCode) ReadLines() []string {
+	return SplitLines(aoc.ToString())
+}
+
+// ParseIntLines parses lines of string to int
+func ParseIntLines(input string) []int {
+	lines := strings.Fields(input)
 	numbers := make([]int, len(lines))
 	for i, line := range lines {
 		numbers[i] = ToInt(line)
@@ -36,15 +41,25 @@ func (aoc *AdventOfCode) ReadIntLines() []int {
 	return numbers
 }
 
-// ReadIntList converts comma seperated list in the buffer to int array
-func (aoc *AdventOfCode) ReadIntList() []int {
+// ReadIntLines converts lines of string to int
+func (aoc *AdventOfCode) ReadIntLines() []int {
+	return ParseIntLines(aoc.ToString())
+}
+
+// ParseIntList converts comma seperated list to int array
+func ParseIntList(input string) []int {
 	isComma := func(c rune) bool {
 		return c == ','
 	}
-	fields := strings.FieldsFunc(aoc.ToString(), isComma)
+	fields := strings.FieldsFunc(input, isComma)
 	numbers := make([]int, len(fields))
 	for i, num := range fields {
 		numbers[i] = ToInt(num)
 	}
 	return numbers
+}
+
+// ReadIntList converts comma seperated list in the buffer to int array
+func (aoc *AdventOfCode) ReadIntList() []int {
+	return ParseIntList(aoc.ToString())
 }
