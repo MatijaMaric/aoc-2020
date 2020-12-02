@@ -46,7 +46,6 @@ func fetch(year int, day int) []byte {
 	body, err := ioutil.ReadAll(resp.Body)
 	Check(err)
 
-	// return strings.TrimSpace(string(body))
 	return body
 }
 
