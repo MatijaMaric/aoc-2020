@@ -20,7 +20,7 @@ const example = `..##.......
 .#..#...#.#`
 
 func TestPart1(t *testing.T) {
-	input := utils.SplitLines(example)
+	input := utils.ParseBoolGrid(example)
 
 	result := part1(input)
 
@@ -28,7 +28,7 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	input := utils.SplitLines(example)
+	input := utils.ParseBoolGrid(example)
 
 	result := part2(input)
 

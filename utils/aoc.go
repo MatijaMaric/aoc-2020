@@ -31,17 +31,22 @@ func (aoc *AdventOfCode) ReadLines() []string {
 	return SplitLines(aoc.ToString())
 }
 
-// ReadBoolGrid reads grid marked by # and . as boolean
-func (aoc *AdventOfCode) ReadBoolGrid() [][]bool {
-	input := aoc.ReadLines()
-	grid := make([][]bool, len(input))
-	for i, line := range input {
+// ParseBoolGrid parse grid marked by # and . as boolean
+func ParseBoolGrid(input string) [][]bool {
+	lines := SplitLines(input)
+	grid := make([][]bool, len(lines))
+	for i, line := range lines {
 		grid[i] = make([]bool, len(line))
 		for j, c := range line {
 			grid[i][j] = c == '#'
 		}
 	}
 	return grid
+}
+
+// ReadBoolGrid reads grid marked by # and . as boolean
+func (aoc *AdventOfCode) ReadBoolGrid() [][]bool {
+	return ParseBoolGrid(aoc.ToString())
 }
 
 // ParseIntLines parses lines of string to int
