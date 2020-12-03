@@ -31,6 +31,19 @@ func (aoc *AdventOfCode) ReadLines() []string {
 	return SplitLines(aoc.ToString())
 }
 
+// ReadBoolGrid reads grid marked by # and . as boolean
+func (aoc *AdventOfCode) ReadBoolGrid() [][]bool {
+	input := aoc.ReadLines()
+	grid := make([][]bool, len(input))
+	for i, line := range input {
+		grid[i] = make([]bool, len(line))
+		for j, c := range line {
+			grid[i][j] = c == '#'
+		}
+	}
+	return grid
+}
+
 // ParseIntLines parses lines of string to int
 func ParseIntLines(input string) []int {
 	lines := strings.Fields(input)

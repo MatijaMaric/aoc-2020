@@ -17,7 +17,7 @@ func main() {
 func part1(input []string) int {
 	ans := 0
 	for _, line := range input {
-		re := regexp.MustCompile(`(\d+)\-(\d+) (\w): (\w+)`)
+		re := regexp.MustCompile(`(\d+)-(\d+) (\w): (\w+)`)
 		matches := re.FindStringSubmatch(line)
 		min := utils.ToInt(matches[1])
 		max := utils.ToInt(matches[2])
@@ -41,7 +41,7 @@ func part1(input []string) int {
 func part2(input []string) int {
 	ans := 0
 	for _, line := range input {
-		re := regexp.MustCompile(`(\d+)\-(\d+) (\w): (\w+)`)
+		re := regexp.MustCompile(`(\d+)-(\d+) (\w): (\w+)`)
 		matches := re.FindStringSubmatch(line)
 		first := utils.ToInt(matches[1])
 		second := utils.ToInt(matches[2])
