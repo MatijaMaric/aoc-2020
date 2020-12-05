@@ -17,7 +17,7 @@ func part1(input []string) int {
 	max := 0
 
 	for _, pass := range input {
-		x, y := bsp(pass)
+		x, y := decode(pass)
 		max = utils.Max(max, x*8+y)
 	}
 
@@ -28,7 +28,7 @@ func part2(input []string) int {
 	var seats [128][8]bool
 
 	for _, pass := range input {
-		x, y := bsp(pass)
+		x, y := decode(pass)
 		seats[x][y] = true
 	}
 
@@ -42,36 +42,28 @@ func part2(input []string) int {
 	return -1
 }
 
-func bsp(input string) (x, y int) {
+func decode(input string) (x, y int) {
 	rows := input[0:7]
 	cols := input[7:10]
 
-	l, r := 0, 127
-	var m int
-	for _, a := range rows {
-		m = (l + r) / 2
-		if a == 'F' {
-			r = m
-		} else {
-			l = m + 1
-		}
-		if l == r {
-			x = l
-		}
-	}
-
-	l, r = 0, 7
-	for _, a := range cols {
-		m = (l + r) / 2
-		if a == 'L' {
-			r = m
-		} else {
-			l = m + 1
-		}
-		if l == r {
-			y = l
-		}
-	}
+	x = bsp(rows, 'F')
+	y = bsp(cols, 'L')
 
 	return
+}
+
+func bsp(input string, char rune) int {
+	l, r := 0, (1<<len(input))-1
+	for _, a := range input {
+		m := (l + r) / 2
+		if a == char {
+			r = m
+		} else {
+			l = m + 1
+		}
+		if l == r {
+			return l
+		}
+	}
+	return -1
 }
