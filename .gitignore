@@ -17,3 +17,4 @@
 *.env
 
 input.txt
+__debug_bin
