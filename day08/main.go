@@ -9,6 +9,11 @@ import (
 	"github.com/MatijaMaric/aoc-2020/utils"
 )
 
+type Instruction struct {
+	op  string
+	arg int
+}
+
 func main() {
 	input := utils.GetDay(2020, 8).ToString()
 
@@ -17,79 +22,73 @@ func main() {
 }
 
 func part1(input string) int {
-	instructions := strings.Split(input, "\n")
-	acc := 0
-	pc := 0
+	instructions := parseInstructions(input)
 
-	executed := mapset.NewSet()
-
-	for !executed.Contains(pc) {
-		if pc >= len(instructions) {
-			break
-		}
-		executed.Add(pc)
-		op, arg := parseInstruction(instructions[pc])
-
-		if op == "nop" {
-			pc++
-		}
-		if op == "jmp" {
-			pc += arg
-		}
-		if op == "acc" {
-			acc += arg
-			pc++
-		}
-	}
+	_, acc := solve(instructions)
 
 	return acc
 }
 
 func part2(input string) int {
-	instructions := strings.Split(input, "\n")
+	instructions := parseInstructions(input)
 
 	for i := 0; i < len(instructions); i++ {
-		if op, _ := parseInstruction(instructions[i]); op == "acc" {
+		prev := instructions[i].op
+		if instructions[i].op == "jmp" {
+			instructions[i].op = "nop"
+		} else if instructions[i].op == "nop" {
+			instructions[i].op = "jmp"
+		} else {
 			continue
 		}
-		executed := mapset.NewSet()
 
-		acc := 0
-		pc := 0
-		for !executed.Contains(pc) {
-			if pc >= len(instructions) {
-				return acc
-			}
-			executed.Add(pc)
-			op, arg := parseInstruction(instructions[pc])
-
-			if op == "nop" {
-				if pc == i {
-					pc += arg
-				} else {
-					pc++
-				}
-			}
-			if op == "jmp" {
-				if pc == i {
-					pc++
-				} else {
-					pc += arg
-				}
-			}
-			if op == "acc" {
-				acc += arg
-				pc++
-			}
+		if halt, acc := solve(instructions); halt {
+			return acc
 		}
+
+		instructions[i].op = prev
 	}
 
 	return -1
 }
 
-func parseInstruction(instruction string) (op string, arg int) {
+func parseInstructions(input string) []Instruction {
+	lines := strings.Split(input, "\n")
+	instructions := make([]Instruction, len(lines))
+	for i, line := range lines {
+		instructions[i] = parseInstruction(line)
+	}
+	return instructions
+}
+
+func parseInstruction(instruction string) Instruction {
 	split := strings.Split(instruction, " ")
-	op = split[0]
-	arg = utils.ToInt(split[1])
-	return
+	return Instruction{split[0], utils.ToInt(split[1])}
+}
+
+func solve(instructions []Instruction) (halt bool, acc int) {
+	executed := mapset.NewSet()
+
+	acc = 0
+	pc := 0
+	for !executed.Contains(pc) {
+		if pc >= len(instructions) {
+			return true, acc
+		}
+		executed.Add(pc)
+		instruction := instructions[pc]
+
+		switch instruction.op {
+		case "nop":
+			pc++
+			break
+		case "jmp":
+			pc += instruction.arg
+			break
+		case "acc":
+			pc++
+			acc += instruction.arg
+		}
+	}
+	return false, acc
 }
