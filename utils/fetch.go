@@ -41,6 +41,10 @@ func fetch(year int, day int) []byte {
 	resp, err := client.Do(req)
 	Check(err)
 
+	if resp.StatusCode != 200 {
+		panic("Input not available.")
+	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
