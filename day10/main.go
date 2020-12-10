@@ -38,15 +38,14 @@ func part1(input []int) int {
 func part2(input []int) int {
 	input = append(input, 0)
 	sort.Ints(input)
-	last := input[len(input)-1] + 3
-	input = append(input, last)
+	input = append(input, input[len(input)-1]+3)
 
-	combs := make([]int, last+1)
-	combs[last] = 1
+	combs := make([]int, len(input))
+	combs[len(combs)-1] = 1
 
 	for i := len(input) - 2; i >= 0; i-- {
 		for j := i + 1; j < len(input) && input[j]-input[i] <= 3; j++ {
-			combs[input[i]] += combs[input[j]]
+			combs[i] += combs[j]
 		}
 	}
 
