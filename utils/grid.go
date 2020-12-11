@@ -22,13 +22,27 @@ func (p Pos) Add(q Pos) Pos {
 	return Pos{p.X + q.X, p.Y + q.Y}
 }
 
-// Moves returns single step moves in all directions on a grid
+// Moves returns single step moves in all orthogonal directions on a grid
 func (p Pos) Moves() []Pos {
 	return []Pos{
 		{p.X, p.Y - 1},
 		{p.X, p.Y + 1},
 		{p.X - 1, p.Y},
 		{p.X + 1, p.Y},
+	}
+}
+
+// AllMoves returns single step moves in all directions including diagonals on a grid
+func (p Pos) AllMoves() []Pos {
+	return []Pos{
+		{p.X - 1, p.Y - 1},
+		{p.X, p.Y - 1},
+		{p.X + 1, p.Y - 1},
+		{p.X - 1, p.Y},
+		{p.X + 1, p.Y},
+		{p.X - 1, p.Y + 1},
+		{p.X, p.Y + 1},
+		{p.X + 1, p.Y + 1},
 	}
 }
 
