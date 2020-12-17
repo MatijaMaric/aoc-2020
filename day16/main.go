@@ -119,7 +119,6 @@ func part2(input string) int {
 				fieldname := could[i].ToSlice()[0].(string)
 				fieldmap[fieldname] = i
 				used.Add(could[i].ToSlice()[0])
-				continue
 			}
 		}
 		if used.Cardinality() == len(fields) {
