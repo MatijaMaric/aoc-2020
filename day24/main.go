@@ -36,42 +36,34 @@ func part2(input string) int {
 	}
 
 	for i := 0; i < 100; i++ {
-		newGrid := make(map[v3]bool)
 		newBlacks := mapset.NewSet()
 		for black := range blacks.Iter() {
 			blackv3 := black.(v3)
 			for _, pos := range blackv3.neighbors() {
-				if _, ok := grid[pos]; !ok {
-					grid[pos] = false
-				}
 				cnt := 0
 				for _, next := range pos.neighbors() {
-					if grid[next] {
+					if blacks.Contains(next) {
 						cnt++
 					}
 				}
 
-				if grid[pos] && (cnt == 0 || cnt > 2) {
-					newGrid[pos] = false
+				if blacks.Contains(pos) && (cnt == 0 || cnt > 2) {
 					continue
 				}
-				if !grid[pos] && cnt == 2 {
-					newGrid[pos] = true
+				if !blacks.Contains(pos) && cnt == 2 {
 					newBlacks.Add(pos)
 					continue
 				}
-				newGrid[pos] = grid[pos]
-				if grid[pos] {
+				if blacks.Contains(pos) {
 					newBlacks.Add(pos)
 				}
 			}
 		}
 
 		blacks = newBlacks
-		grid = newGrid
 	}
 
-	return countBlack(grid)
+	return blacks.Cardinality()
 }
 
 func countBlack(grid map[v3]bool) int {
