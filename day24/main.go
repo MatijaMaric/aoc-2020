@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/cheggaaa/pb/v3"
+	mapset "github.com/deckarep/golang-set"
 
 	"github.com/MatijaMaric/aoc-2020/utils"
 )
@@ -27,51 +27,49 @@ func part1(input string) int {
 
 func part2(input string) int {
 	grid := makeGrid(input)
+	blacks := mapset.NewSet()
 
-	min, max := v3{utils.MaxInt, utils.MaxInt, utils.MaxInt}, v3{utils.MinInt, utils.MinInt, utils.MinInt}
-	for k := range grid {
-		min = minV3(min, k)
-		max = maxV3(max, k)
+	for k, v := range grid {
+		if v {
+			blacks.Add(k)
+		}
 	}
-	min = min.add(v3{-1, -1, -1})
-	max = max.add(v3{1, 1, 1})
 
-	bar := pb.StartNew(100)
 	for i := 0; i < 100; i++ {
 		newGrid := make(map[v3]bool)
+		newBlacks := mapset.NewSet()
+		for black := range blacks.Iter() {
+			blackv3 := black.(v3)
+			for _, pos := range blackv3.neighbors() {
+				if _, ok := grid[pos]; !ok {
+					grid[pos] = false
+				}
+				cnt := 0
+				for _, next := range pos.neighbors() {
+					if grid[next] {
+						cnt++
+					}
+				}
 
-		for x := min.x; x <= max.x; x++ {
-			for y := min.y; y <= max.y; y++ {
-				for z := min.z; z <= max.z; z++ {
-					pos := v3{x, y, z}
-					if _, ok := grid[pos]; !ok {
-						grid[pos] = false
-					}
-					cnt := 0
-					for _, next := range pos.neighbors() {
-						if grid[next] {
-							cnt++
-						}
-					}
-					if grid[pos] && (cnt == 0 || cnt > 2) {
-						newGrid[pos] = false
-						continue
-					}
-					if !grid[pos] && cnt == 2 {
-						newGrid[pos] = true
-						continue
-					}
-					newGrid[pos] = grid[pos]
+				if grid[pos] && (cnt == 0 || cnt > 2) {
+					newGrid[pos] = false
+					continue
+				}
+				if !grid[pos] && cnt == 2 {
+					newGrid[pos] = true
+					newBlacks.Add(pos)
+					continue
+				}
+				newGrid[pos] = grid[pos]
+				if grid[pos] {
+					newBlacks.Add(pos)
 				}
 			}
 		}
 
+		blacks = newBlacks
 		grid = newGrid
-		min = min.add(v3{-1, -1, -1})
-		max = max.add(v3{1, 1, 1})
-		bar.Increment()
 	}
-	bar.Finish()
 
 	return countBlack(grid)
 }
